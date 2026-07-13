@@ -144,7 +144,7 @@ gh attestation verify gimme-sum-headers-chrome.zip --repo jeeftor/gimme-sum-head
 gh attestation verify gimme-sum-headers-firefox.zip --repo jeeftor/gimme-sum-headers
 ```
 
-GitHub provenance proves where a ZIP came from; it does not replace browser-store signing. Chrome Web Store and Mozilla/AMO are responsible for browser-trusted installation and updates. See the [browser-store signing guide](docs/store-signing.md) for the one-time setup and protected GitHub environment configuration.
+GitHub provenance proves where a ZIP came from; it does not replace browser-store signing. Chrome Web Store and Mozilla/AMO are responsible for browser-trusted installation and updates. See the [browser-store signing guide](docs/store-signing.md) for the one-time setup and GitHub environment configuration.
 
 ---
 

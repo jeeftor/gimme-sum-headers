@@ -13,7 +13,7 @@ authorities that sign extensions for their browsers.
    the intended visibility, and publish it. The initial manual publish is required before CI can publish later
    updates through the API.
 3. Create a Google Cloud OAuth web client with the Chrome Web Store scope. Store the three long-lived
-   credentials below only in the protected GitHub environment, never in git:
+   credentials below only in the GitHub environment, never in git:
 
    - `CWS_CLIENT_ID` (secret)
    - `CWS_CLIENT_SECRET` (secret)
@@ -31,7 +31,7 @@ to this pure WebExtension. A separate CRX private key is not generated or stored
 
 1. Register the owning account in [AMO Developer Hub](https://addons.mozilla.org/developers/).
    Review the Firefox Add-on Distribution Agreement there.
-2. Create AMO API credentials and save them as protected GitHub environment secrets:
+2. Create AMO API credentials and save them as GitHub environment secrets:
 
    - `AMO_JWT_ISSUER`
    - `AMO_JWT_SECRET`
@@ -49,20 +49,19 @@ for AMO review. Firefox users can install only after AMO accepts and publishes t
 ## GitHub Actions configuration
 
 Create a repository environment named `extension-signing`. Add the Store secrets and identifiers listed above to
-that environment. The manual `Publish browser stores` workflow uses the environment, so you can require an
-approval there before any credential is made available to a job. Create the non-sensitive repository variables
+that environment. The manual `Publish browser stores` workflow uses the environment. Leave its protection rules
+empty when releases should publish automatically. Create the non-sensitive repository variables
 `PUBLISH_CHROME` and `PUBLISH_FIREFOX` separately; leave each empty until its store setup is complete, then set
 it to `true` to enable tag-triggered publication.
 
 Once the corresponding repository variable is set to `true`, every tagged GitHub release
-publishes the configured store automatically after the protected-environment approval. The Chrome job submits the
+publishes the configured store automatically. The Chrome job submits the
 package for Store review. The Firefox job submits the staged extension through AMO for public publication. The
 GitHub Release contains a browser-specific upload ZIP and provenance attestation for each browser; AMO is the
 Firefox installer and update source once it approves the submitted version.
 
 The manual **Publish browser stores** workflow is reserved for the first publication and for backfilling an
-existing release. Enter its tag, select only the store you intend to publish to, and approve the protected
-environment.
+existing release. Enter its tag and select only the store you intend to publish to.
 
 ## Chrome Web Store listing material
 
