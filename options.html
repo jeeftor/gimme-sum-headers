@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CF Access Header Injector</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <h1>CF Access Header Injector</h1>
+      <p class="intro">
+        Configure one Cloudflare Access service token per HTTPS site. Every enabled site injects only
+        <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code> into its own requests.
+      </p>
+
+      <form id="configuration-form">
+        <div id="profile-list" class="profile-list"></div>
+        <button id="add-site" type="button" class="secondary">Add Cloudflare site</button>
+        <button type="submit">Save configuration</button>
+        <button id="forget" type="button" class="secondary">Forget all credentials</button>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside>
+        <h2>Security note</h2>
+        <p>
+          Client Secrets stay in this browser profile's local extension storage and are never synchronized.
+          Browser storage is not a hardware-backed secret vault: use a dedicated, least-privilege service token for
+          each site, keep every scope narrow, and revoke a token if this browser profile is compromised.
+        </p>
+      </aside>
+    </main>
+    <template id="profile-template">
+      <fieldset class="profile" data-profile>
+        <legend>Cloudflare Access site</legend>
+        <label>
+          <span>Domain scope</span>
+          <input class="scope" type="text" autocomplete="off" required />
+          <small>Use <code>*.vookie.net</code> for subdomains only, or <code>app.vookie.net</code> for one site.</small>
+        </label>
+        <label>
+          <span>CF Access Client ID</span>
+          <input class="client-id" type="text" autocomplete="off" required />
+        </label>
+        <label>
+          <span>CF Access Client Secret</span>
+          <input class="client-secret" type="password" autocomplete="new-password" required />
+        </label>
+        <label class="toggle">
+          <input class="enabled" type="checkbox" checked />
+          <span>Enable this site</span>
+        </label>
+        <button class="remove-site secondary" type="button">Remove site</button>
+      </fieldset>
+    </template>
+    <script src="rules.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

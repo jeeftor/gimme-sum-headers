@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "CF Access Header Injector",
+  "version": "0.1.0",
+  "description": "Adds Cloudflare Access service-token headers only to configured HTTPS sites.",
+  "permissions": [
+    "declarativeNetRequest",
+    "storage"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Configure CF Access Header Injector"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "bootstrap",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cf-access-header-injector@vookie.net",
+      "strict_min_version": "133.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
+}

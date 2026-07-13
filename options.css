@@ -1,0 +1,125 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  background: Canvas;
+  color: CanvasText;
+}
+
+main {
+  max-width: 44rem;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+
+h1,
+h2 {
+  line-height: 1.2;
+}
+
+.intro {
+  max-width: 40rem;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.profile-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.profile {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, CanvasText 25%, Canvas 75%);
+  border-radius: 0.5rem;
+}
+
+.profile legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 650;
+}
+
+small {
+  color: color-mix(in srgb, CanvasText 70%, Canvas 30%);
+  font-weight: 400;
+}
+
+input[type="text"],
+input[type="password"] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px solid color-mix(in srgb, CanvasText 35%, Canvas 65%);
+  border-radius: 0.35rem;
+  color: inherit;
+  background: Canvas;
+  font: inherit;
+}
+
+.toggle {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+button {
+  justify-self: start;
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: #165dff;
+  color: white;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+}
+
+button.secondary {
+  margin-top: -0.4rem;
+  background: color-mix(in srgb, CanvasText 15%, Canvas 85%);
+  color: CanvasText;
+}
+
+.profile .remove-site {
+  margin-top: 0;
+}
+
+#status {
+  min-height: 1.5rem;
+  margin: 0;
+}
+
+#status[data-error="true"] {
+  color: #b42318;
+}
+
+aside {
+  padding: 1rem 1.25rem;
+  border-inline-start: 0.25rem solid #e0a000;
+  background: color-mix(in srgb, #e0a000 10%, Canvas 90%);
+}
+
+aside h2,
+aside p {
+  margin: 0;
+}
+
+aside p {
+  margin-top: 0.5rem;
+}
