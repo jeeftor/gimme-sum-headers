@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gimme Sum Headers!</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Gimme Sum Headers!</h1>
+      <p id="host" class="host">Checking this tab…</p>
+      <p id="effective" class="effective"></p>
+      <label for="header-set">Use this header set on this exact site</label>
+      <select id="header-set" disabled></select>
+      <div class="actions">
+        <button id="apply" type="button" disabled>Use on this site</button>
+        <button id="remove" type="button" class="secondary" hidden>Remove exact override</button>
+      </div>
+      <p id="status" role="status" aria-live="polite"></p>
+      <a id="settings" href="#">Manage header sets</a>
+    </main>
+    <script src="rules.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

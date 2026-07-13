@@ -1,0 +1,126 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  line-height: 1.4;
+  --background: #f4f7fb;
+  --surface: #ffffff;
+  --text: #172b3a;
+  --muted: #52677a;
+  --border: #9fb2c3;
+  --accent: #1666cc;
+  --accent-contrast: #ffffff;
+  --secondary: #e8eef5;
+  --danger: #b42318;
+  --focus-ring: #76a7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0e1520;
+    --surface: #172130;
+    --text: #edf4fb;
+    --muted: #b5c4d5;
+    --border: #60748d;
+    --accent: #78a9ff;
+    --accent-contrast: #102440;
+    --secondary: #263548;
+    --danger: #ffb4ab;
+    --focus-ring: #add0ff;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 21rem;
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+}
+
+main {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+}
+
+h1,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.15rem;
+}
+
+.host {
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+.effective,
+#status {
+  min-height: 1.4rem;
+  color: var(--muted);
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 650;
+}
+
+select,
+button {
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+select:focus,
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+button {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  cursor: pointer;
+  font-weight: 650;
+}
+
+button.secondary {
+  border: 1px solid var(--border);
+  background: var(--secondary);
+  color: var(--text);
+}
+
+button:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.actions {
+  display: grid;
+  gap: 0.5rem;
+}
+
+#status[data-error="true"] {
+  color: var(--danger);
+}
+
+a {
+  justify-self: start;
+  color: var(--accent);
+}

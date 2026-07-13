@@ -1,0 +1,15 @@
+{
+  "summary": {
+    "en-US": "Apply reusable Cloudflare, Bearer, and custom header sets to chosen HTTPS sites."
+  },
+  "description": {
+    "en-US": "Create reusable Cloudflare Access, Bearer Token, or constrained Custom header sets, then map each set to enabled HTTPS sites. The toolbar popup can map an existing set to the active hostname. Exact host mappings replace wildcard defaults, and header sets never merge. Header values and local request rules remain in the browser profile to work after restarts: this is not a password manager or hardware-backed secret vault. Use dedicated, least-privilege credentials and keep scopes narrow. The extension has no telemetry, accounts, cloud sync, remote code, or developer-operated service."
+  },
+  "categories": [
+    "privacy-security"
+  ],
+  "version": {
+    "license": "MPL-2.0",
+    "approval_notes": "The unminified source is public at https://github.com/jeeftor/gimme-sum-headers. The extension has no build step, no remote code, and no developer-operated service. Test by creating a Custom header set with a non-sensitive value, mapping it to an HTTPS test site, and inspecting that site's request headers in browser developer tools. Cloudflare Access and Bearer Token are presets that generate fixed header shapes."
+  }
+}

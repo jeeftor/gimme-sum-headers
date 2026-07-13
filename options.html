@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gimme Sum Headers!</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <header class="page-header">
+        <p class="eyebrow">HTTPS request headers</p>
+        <h1>Gimme Sum Headers!</h1>
+        <p class="intro">
+          Reuse one header set across the HTTPS sites you choose. Exact host mappings replace wildcard defaults;
+          <code>dvr.my.domain.test</code> beats <code>*.my.domain.test</code>.
+        </p>
+      </header>
+
+      <form id="configuration-form">
+        <section class="header-set-workspace" aria-labelledby="header-sets-title">
+          <aside class="header-set-sidebar">
+            <div class="section-heading sidebar-heading">
+              <div>
+                <p class="eyebrow">Library</p>
+                <h2 id="header-sets-title">Header sets</h2>
+                <p>Choose one to edit its details.</p>
+              </div>
+              <button id="add-header-set" type="button" class="secondary">Add header set</button>
+            </div>
+            <div id="header-set-list" class="header-set-list"></div>
+          </aside>
+
+          <section class="header-set-editor-panel" aria-labelledby="selected-header-set-title">
+            <div class="editor-heading">
+              <p class="eyebrow">Selected header set</p>
+              <h2 id="selected-header-set-title">Header set</h2>
+              <p id="selected-header-set-description"></p>
+            </div>
+            <div id="header-set-editor"></div>
+          </section>
+        </section>
+
+        <section class="site-assignments-panel" aria-labelledby="site-assignments-title">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Mappings</p>
+              <h2 id="site-assignments-title">Site assignments</h2>
+              <p>One effective set applies to each site. Wildcards are defaults only.</p>
+            </div>
+            <button id="add-assignment" type="button" class="secondary">Add site assignment</button>
+          </div>
+          <div id="site-assignment-list" class="assignment-list"></div>
+        </section>
+
+        <div class="actions">
+          <button type="submit">Save configuration</button>
+          <p id="status" role="status" aria-live="polite"></p>
+        </div>
+
+        <details class="danger-zone">
+          <summary>Danger zone</summary>
+          <p>Remove every saved header value, site mapping, installed rule, and granted host permission from this browser.</p>
+          <button id="forget" type="button" class="destructive">Forget all configuration</button>
+        </details>
+      </form>
+
+      <aside class="security-note">
+        <h2>Security warning</h2>
+        <p>
+          Header values and their local request rules stay in this browser profile and are never synchronized. This is
+          not a password manager or hardware-backed secret vault. They are sent only to HTTPS sites you explicitly map.
+        </p>
+        <p>
+          Prefer dedicated, least-privilege credentials and exact hosts. A wildcard sends its header set to every
+          matching subdomain. Revoke affected credentials if this browser profile or device is compromised.
+        </p>
+        <p><a href="https://github.com/jeeftor/gimme-sum-headers/blob/master/PRIVACY.md" target="_blank" rel="noreferrer">Privacy policy</a></p>
+      </aside>
+    </main>
+
+    <template id="header-set-list-item-template">
+      <button class="header-set-list-item" type="button">
+        <span class="header-set-list-item-name"></span>
+        <span class="header-set-list-item-meta"></span>
+      </button>
+    </template>
+
+    <template id="header-set-editor-template">
+      <fieldset class="header-set-editor" data-header-set>
+        <legend>Set details</legend>
+        <label>
+          <span>Name</span>
+          <input class="header-set-name" type="text" autocomplete="off" placeholder="Cloudflare Access" />
+        </label>
+        <label>
+          <span>Preset</span>
+          <select class="header-set-kind">
+            <option value="cloudflare-access">Cloudflare Access</option>
+            <option value="bearer-token">Bearer token</option>
+            <option value="custom">Custom headers</option>
+          </select>
+        </label>
+        <div class="preset-fields"></div>
+        <div class="editor-footer">
+          <p class="header-set-usage"></p>
+          <button class="remove-header-set destructive" type="button">Remove header set</button>
+        </div>
+      </fieldset>
+    </template>
+
+    <template id="site-assignment-template">
+      <fieldset class="site-assignment" data-site-assignment>
+        <legend>Site assignment</legend>
+        <label class="assignment-scope-field">
+          <span>HTTPS hostname or wildcard default</span>
+          <input class="assignment-scope" type="text" autocomplete="off" placeholder="dvr.my.domain.test or *.my.domain.test" />
+          <small>Exact hosts override wildcard defaults. <code>*.my.domain.test</code> excludes the apex.</small>
+        </label>
+        <label>
+          <span>Header set</span>
+          <select class="assignment-header-set"></select>
+        </label>
+        <div class="assignment-actions">
+          <label class="toggle">
+            <input class="assignment-enabled" type="checkbox" checked />
+            <span>Enabled</span>
+          </label>
+          <button class="remove-assignment secondary" type="button">Remove</button>
+        </div>
+      </fieldset>
+    </template>
+
+    <script src="rules.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

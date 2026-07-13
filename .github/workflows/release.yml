@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/check-release-version.mjs "$GITHUB_REF_NAME"
+      - run: make package
+      - run: make firefox-package
+      - name: Generate Chrome package provenance attestation
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/gimme-sum-headers-chrome.zip
+      - name: Generate Firefox package provenance attestation
+        uses: actions/attest@v4
+        with:
+          subject-path: dist/gimme-sum-headers-firefox.zip
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/gimme-sum-headers-chrome.zip dist/gimme-sum-headers-firefox.zip --generate-notes
+
+  chrome:
+    needs: release
+    if: ${{ vars.PUBLISH_CHROME == 'true' }}
+    runs-on: ubuntu-latest
+    environment: extension-signing
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/check-release-version.mjs "$GITHUB_REF_NAME"
+      - run: make package
+      - name: Upload and submit Chrome Web Store package
+        env:
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          CWS_PUBLISHER_ID: ${{ vars.CWS_PUBLISHER_ID }}
+          CWS_ITEM_ID: ${{ vars.CWS_ITEM_ID }}
+        run: node scripts/publish-chrome-store.mjs dist/gimme-sum-headers-chrome.zip
+
+  firefox:
+    needs: release
+    if: ${{ vars.PUBLISH_FIREFOX == 'true' }}
+    runs-on: ubuntu-latest
+    environment: extension-signing
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/check-release-version.mjs "$GITHUB_REF_NAME"
+      - run: make check
+      - run: make firefox-lint
+      - name: Submit public Firefox Add-ons listing
+        env:
+          WEB_EXT_API_KEY: ${{ secrets.AMO_JWT_ISSUER }}
+          WEB_EXT_API_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: |
+          test -n "$WEB_EXT_API_KEY" && test -n "$WEB_EXT_API_SECRET" || {
+            echo "::error title=Missing AMO credentials::Set AMO_JWT_ISSUER and AMO_JWT_SECRET in extension-signing."
+            exit 1
+          }
+          NO_UPDATE_NOTIFIER=1 npm_config_cache=.npm-cache npx --yes web-ext@9.4.0 sign --channel=listed --amo-metadata=amo-metadata.json --approval-timeout=0 --source-dir dist/firefox-package
