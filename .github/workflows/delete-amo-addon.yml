@@ -28,6 +28,7 @@ jobs:
           node <<'NODE'
           const crypto = require("node:crypto");
 
+          async function main() {
           const issuer = process.env.AMO_JWT_ISSUER;
           const secret = process.env.AMO_JWT_SECRET;
           const addonGuid = process.env.ADDON_GUID;
@@ -66,4 +67,10 @@ jobs:
           }
 
           console.log("AMO add-on permanently deleted.");
+          }
+
+          main().catch((error) => {
+            console.error(error.message);
+            process.exitCode = 1;
+          });
           NODE
