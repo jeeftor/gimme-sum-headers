@@ -27,12 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: extension-signing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ inputs.tag }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
+          package-manager-cache: false
       - run: node scripts/check-release-version.mjs "${{ inputs.tag }}"
       - run: make package
       - name: Upload and submit Chrome Web Store package
@@ -49,12 +50,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: extension-signing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: ${{ inputs.tag }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
+          package-manager-cache: false
       - run: node scripts/check-release-version.mjs "${{ inputs.tag }}"
       - run: make check
       - run: make firefox-lint

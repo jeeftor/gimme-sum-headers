@@ -14,10 +14,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
+          package-manager-cache: false
       - run: node scripts/check-release-version.mjs "$GITHUB_REF_NAME"
       - run: make package
       - run: make firefox-package
@@ -42,10 +43,11 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
+          package-manager-cache: false
       - run: node scripts/check-release-version.mjs "$GITHUB_REF_NAME"
       - run: make package
       - name: Upload and submit Chrome Web Store package
@@ -65,10 +67,11 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
+          package-manager-cache: false
       - run: node scripts/check-release-version.mjs "$GITHUB_REF_NAME"
       - run: make check
       - run: make firefox-lint

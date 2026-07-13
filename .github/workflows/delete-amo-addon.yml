@@ -15,9 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: extension-signing
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
+          package-manager-cache: false
       - name: Permanently delete the AMO add-on
         env:
           ADDON_GUID: ${{ inputs.addon_guid }}

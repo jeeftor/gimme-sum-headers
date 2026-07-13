@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="icons/icon-128.png" width="112" height="112" alt="Gimme Sum Headers! shield icon" />
+  <img src="icons/icon-128.png" width="112" height="112" alt="Gimme Sum Headers! header injection icon" />
 </p>
 
 <h1 align="center">Gimme Sum Headers!</h1>

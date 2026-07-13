@@ -20,6 +20,7 @@ check: test
 	node --check rules.js
 	node --check scripts/check-release-version.mjs
 	node scripts/check-amo-metadata.mjs
+	node --check scripts/sync-amo-listing-assets.mjs
 	node --check scripts/prepare-browser-package.mjs
 	node --check scripts/publish-chrome-store.mjs
 	node --check scripts/stage-package.mjs
