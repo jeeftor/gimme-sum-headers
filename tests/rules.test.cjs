@@ -62,6 +62,8 @@ test("a header rule sets every configured custom header", () => {
     { header: "X-API-Key", operation: "set", value: "example-key" },
     { header: "Authorization", operation: "set", value: "Bearer example" },
   ]);
+  assert.equal(rule.condition.resourceTypes.includes("main_frame"), true);
+  assert.equal(rule.condition.resourceTypes.includes("xmlhttprequest"), true);
 });
 
 test("unsafe, duplicate, and folded custom headers are rejected", () => {

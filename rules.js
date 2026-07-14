@@ -25,6 +25,23 @@
     "user-agent",
   ]);
   const HEADER_TOKEN = /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/;
+  const REQUEST_RESOURCE_TYPES = [
+    "main_frame",
+    "sub_frame",
+    "stylesheet",
+    "script",
+    "image",
+    "font",
+    "object",
+    "xmlhttprequest",
+    "ping",
+    "csp_report",
+    "media",
+    "websocket",
+    "webtransport",
+    "webbundle",
+    "other",
+  ];
 
   /**
    * Normalizes an HTTPS hostname or wildcard suffix for browser rule generation.
@@ -308,7 +325,11 @@
     const scope = normalizeScope(configuration.scope);
     const headers = normalizeHeaders(configuration.headers);
     const excludedRequestDomains = normalizeExcludedDomains(configuration.excludedRequestDomains, scope);
-    const condition = { regexFilter: scope.regexFilter };
+    // Chrome excludes top-level navigations when resource types are omitted.
+    const condition = {
+      regexFilter: scope.regexFilter,
+      resourceTypes: REQUEST_RESOURCE_TYPES,
+    };
 
     if (excludedRequestDomains.length > 0) {
       condition.excludedRequestDomains = excludedRequestDomains;

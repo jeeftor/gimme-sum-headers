@@ -5,10 +5,10 @@ PACKAGE_FILES := manifest.json background.js options.html options.js options.css
 PACKAGE_EPOCH ?= $(shell git log -1 --format=%ct 2>/dev/null || printf 315532800)
 FIREFOX_WEB_EXT_VERSION := 9.4.0
 
-.PHONY: help test check stage chrome-stage firefox-stage package firefox-package firefox-lint
+.PHONY: help test check stage chrome-stage firefox-stage package firefox-package firefox-lint browser-smoke
 
 help:
-	@printf '%s\n' 'Available targets:' '  make test            Run rule-generation tests.' '  make check           Validate JSON and JavaScript syntax.' '  make package         Create the deterministic Chrome Web Store ZIP.' '  make firefox-package Create the deterministic Firefox AMO upload ZIP.' '  make firefox-lint    Lint the staged Firefox extension with web-ext.'
+	@printf '%s\n' 'Available targets:' '  make test            Run rule-generation tests.' '  make check           Validate JSON and JavaScript syntax.' '  make package         Create the deterministic Chrome Web Store ZIP.' '  make firefox-package Create the deterministic Firefox AMO upload ZIP.' '  make firefox-lint    Lint the staged Firefox extension with web-ext.' '  make browser-smoke   Verify Chromium injects a test header at httpbingo.org.'
 
 test:
 	node --test tests/*.test.cjs
@@ -45,3 +45,6 @@ firefox-package: check firefox-stage
 
 firefox-lint: firefox-stage
 	NO_UPDATE_NOTIFIER=1 npm_config_cache=.npm-cache npx --yes web-ext@$(FIREFOX_WEB_EXT_VERSION) lint --source-dir dist/firefox-package
+
+browser-smoke: chrome-stage
+	node tests/browser-smoke.mjs
