@@ -13,6 +13,9 @@ const addHeaderSetButton = document.querySelector("#add-header-set");
 const addAssignmentButton = document.querySelector("#add-assignment");
 const forgetButton = document.querySelector("#forget");
 const status = document.querySelector("#status");
+const checkUpdateButton = document.querySelector("#check-update");
+const updateStatus = document.querySelector("#update-status");
+const updateLink = document.querySelector("#update-link");
 
 let headerSets = [];
 let selectedHeaderSetId = null;
@@ -22,6 +25,7 @@ form.addEventListener("submit", saveConfiguration);
 addHeaderSetButton.addEventListener("click", appendHeaderSet);
 addAssignmentButton.addEventListener("click", () => appendAssignment());
 forgetButton.addEventListener("click", forgetConfiguration);
+checkUpdateButton.addEventListener("click", checkForUpdate);
 
 /**
  * Restores saved reusable header sets and site assignments.
@@ -31,6 +35,38 @@ forgetButton.addEventListener("click", forgetConfiguration);
 async function restoreConfiguration() {
   const configuration = await sendMessage({ type: "get-options-state" });
   renderConfiguration(configuration);
+}
+
+/**
+ * Checks the latest GitHub Release only after an explicit user action.
+ *
+ * @returns {Promise<void>} A promise that resolves after update feedback is shown.
+ */
+async function checkForUpdate() {
+  const githubPermission = "https://api.github.com/*";
+  updateLink.hidden = true;
+  updateStatus.textContent = "Checking GitHub for the latest release…";
+
+  const granted = await extension.permissions.request({ origins: [githubPermission] });
+  if (!granted) {
+    updateStatus.textContent = "GitHub access was not granted; no update check was made.";
+    return;
+  }
+
+  try {
+    const update = await sendMessage({ type: "check-update" });
+    if (update.updateAvailable) {
+      updateStatus.textContent = `Update available: v${update.latestVersion} (installed: v${update.currentVersion}).`;
+      updateLink.href = update.releaseUrl;
+      updateLink.hidden = false;
+    } else if (update.latestVersion === update.currentVersion) {
+      updateStatus.textContent = `You are on the latest GitHub release (v${update.currentVersion}).`;
+    } else {
+      updateStatus.textContent = `Installed v${update.currentVersion} is newer than the latest GitHub release (v${update.latestVersion}).`;
+    }
+  } catch {
+    updateStatus.textContent = "GitHub could not check for an update. Try again later.";
+  }
 }
 
 /**

@@ -4,6 +4,7 @@ const extension = globalThis.browser ?? globalThis.chrome;
 const HEADER_SETS_KEY = "headerSets";
 const SITE_ASSIGNMENTS_KEY = "siteAssignments";
 const LEGACY_PROFILES_KEY = "profiles";
+const GITHUB_RELEASES_URL = "https://api.github.com/repos/jeeftor/gimme-sum-headers/releases/latest";
 
 extension.runtime.onInstalled.addListener(() => {
   void initializeExtension();
@@ -60,9 +61,74 @@ async function handleMessage(message) {
       return removeExactHost(message.host);
     case "forget-configuration":
       return forgetConfiguration();
+    case "check-update":
+      return checkForUpdate();
     default:
       throw new Error("Unknown Gimme Sum Headers request.");
   }
+}
+
+/**
+ * Compares the installed extension version with the latest public GitHub release.
+ *
+ * @returns {Promise<{currentVersion: string, latestVersion: string, updateAvailable: boolean, releaseUrl: string}>} Update details.
+ */
+async function checkForUpdate() {
+  const response = await fetch(GITHUB_RELEASES_URL, {
+    headers: { Accept: "application/vnd.github+json" },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`GitHub update check failed with HTTP ${response.status}.`);
+  }
+
+  const release = await response.json();
+  const currentVersion = extension.runtime.getManifest().version;
+  const latestVersion = normalizeReleaseVersion(release?.tag_name);
+
+  if (!latestVersion || typeof release?.html_url !== "string") {
+    throw new Error("GitHub did not return a usable latest release.");
+  }
+
+  return {
+    currentVersion,
+    latestVersion,
+    updateAvailable: compareVersions(latestVersion, currentVersion) > 0,
+    releaseUrl: release.html_url,
+  };
+}
+
+/**
+ * Removes a release tag prefix and accepts only three-part semantic versions.
+ *
+ * @param {unknown} value GitHub release tag value.
+ * @returns {string|null} A normalized version, or null for an unsupported tag.
+ */
+function normalizeReleaseVersion(value) {
+  const version = String(value ?? "").replace(/^v/, "");
+  return /^\d+\.\d+\.\d+$/.test(version) ? version : null;
+}
+
+/**
+ * Compares two normalized three-part semantic versions.
+ *
+ * @param {string} first First version.
+ * @param {string} second Second version.
+ * @returns {number} A positive value when first is newer.
+ */
+function compareVersions(first, second) {
+  const firstParts = first.split(".").map(Number);
+  const secondParts = second.split(".").map(Number);
+
+  for (let index = 0; index < firstParts.length; index += 1) {
+    const difference = firstParts[index] - secondParts[index];
+    if (difference !== 0) {
+      return difference;
+    }
+  }
+
+  return 0;
 }
 
 /**

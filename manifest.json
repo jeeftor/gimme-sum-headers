@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Gimme Sum Headers!",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Applies local header sets to selected HTTPS sites; it is not a password manager.",
   "homepage_url": "https://github.com/jeeftor/gimme-sum-headers",
   "permissions": [
