@@ -34,12 +34,12 @@ rule.condition.regexFilter = `^http://127\\.0\\.0\\.1:${echoAddress.port}(?:/|$)
 const manifestPath = join(extensionPath, "manifest.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 manifest.host_permissions = [...new Set([...(manifest.host_permissions ?? []), "http://127.0.0.1/*"])];
-manifest.permissions = [...new Set([...(manifest.permissions ?? []), "declarativeNetRequestFeedback"])];
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
 try {
   const context = await chromium.launchPersistentContext(userDataDir, {
     ...(browserExecutablePath ? { executablePath: browserExecutablePath } : { channel: "chromium" }),
+    ignoreDefaultArgs: ["--disable-extensions"],
     headless: true,
     args: [
       `--disable-extensions-except=${extensionPath}`,
@@ -62,11 +62,8 @@ try {
 
     const page = await context.newPage();
     await page.goto(echoUrl, { waitUntil: "domcontentloaded" });
-    const matchedRuleIds = await worker.evaluate(async () => {
-      const details = await chrome.declarativeNetRequest.getMatchedRules();
-      return details.rulesMatchedInfo.map((item) => item.rule.ruleId);
-    });
-    assert.equal(matchedRuleIds.includes(rule.id), true);
+    const response = JSON.parse(await page.locator("body").innerText());
+    assert.equal(response.headers[testHeaderName.toLowerCase()], testHeaderValue);
     console.log(`Verified ${testHeaderName} through extension ${extensionId}.`);
 
     const optionsPage = await context.newPage();
