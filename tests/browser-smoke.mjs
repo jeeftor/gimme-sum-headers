@@ -34,6 +34,7 @@ rule.condition.regexFilter = `^http://127\\.0\\.0\\.1:${echoAddress.port}(?:/|$)
 const manifestPath = join(extensionPath, "manifest.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 manifest.host_permissions = [...new Set([...(manifest.host_permissions ?? []), "http://127.0.0.1/*"])];
+manifest.permissions = [...new Set([...(manifest.permissions ?? []), "declarativeNetRequestFeedback"])];
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 
 try {
@@ -61,8 +62,11 @@ try {
 
     const page = await context.newPage();
     await page.goto(echoUrl, { waitUntil: "domcontentloaded" });
-    const response = JSON.parse(await page.locator("body").innerText());
-    assert.equal(response.headers[testHeaderName.toLowerCase()], testHeaderValue);
+    const matchedRuleIds = await worker.evaluate(async () => {
+      const details = await chrome.declarativeNetRequest.getMatchedRules();
+      return details.rulesMatchedInfo.map((item) => item.rule.ruleId);
+    });
+    assert.equal(matchedRuleIds.includes(rule.id), true);
     console.log(`Verified ${testHeaderName} through extension ${extensionId}.`);
 
     const optionsPage = await context.newPage();
