@@ -1,6 +1,7 @@
 const extension = globalThis.browser ?? globalThis.chrome;
 
 const hostLabel = document.querySelector("#host");
+const connectionState = document.querySelector("#connection-state");
 const effectiveLabel = document.querySelector("#effective");
 const headerSetSelect = document.querySelector("#header-set");
 const applyButton = document.querySelector("#apply");
@@ -67,9 +68,11 @@ async function refreshPopupState() {
         : "Wildcard default is disabled.";
       removeButton.hidden = true;
     }
+    setConnectionState(effective.assignment.enabled, effective.assignment.enabled ? "Headers active" : "Headers paused");
     headerSetSelect.value = effective.assignment.headerSetId;
   } else {
     effectiveLabel.textContent = "No header set applies to this site.";
+    setConnectionState(false, "Needs a mapping");
     removeButton.hidden = true;
     headerSetSelect.value = selectedId;
   }
@@ -148,10 +151,23 @@ async function openSettings(event) {
  */
 function showUnavailable(message) {
   hostLabel.textContent = message;
+  setConnectionState(false, "Unavailable");
   effectiveLabel.textContent = "";
   headerSetSelect.disabled = true;
   applyButton.disabled = true;
   removeButton.hidden = true;
+}
+
+/**
+ * Shows whether this hostname currently receives a header set.
+ *
+ * @param {boolean} isActive Whether a header set applies to the active hostname.
+ * @param {string} message Concise status text.
+ * @returns {void}
+ */
+function setConnectionState(isActive, message) {
+  connectionState.dataset.state = isActive ? "active" : "inactive";
+  connectionState.textContent = message;
 }
 
 /**

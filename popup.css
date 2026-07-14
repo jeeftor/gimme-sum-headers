@@ -55,6 +55,14 @@ h1 {
   font-size: 1.15rem;
 }
 
+.eyebrow {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .host {
   overflow-wrap: anywhere;
   font-weight: 700;
@@ -64,6 +72,34 @@ h1 {
 #status {
   min-height: 1.4rem;
   color: var(--muted);
+}
+
+.connection-state {
+  width: fit-content;
+  min-height: 1.7rem;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 750;
+}
+
+.connection-state[data-state="active"] {
+  background: #dff6e8;
+  color: #146c3b;
+}
+
+.connection-state[data-state="inactive"],
+.connection-state[data-state="unknown"] {
+  background: var(--secondary);
+  color: var(--muted);
+}
+
+@media (prefers-color-scheme: dark) {
+  .connection-state[data-state="active"] {
+    background: #164a2d;
+    color: #a9eabf;
+  }
 }
 
 label {

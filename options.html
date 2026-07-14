@@ -11,10 +11,7 @@
       <header class="page-header">
         <p class="eyebrow">HTTPS request headers</p>
         <h1>Gimme Sum Headers!</h1>
-        <p class="intro">
-          Reuse one header set across the HTTPS sites you choose. Exact host mappings replace wildcard defaults;
-          <code>dvr.my.domain.test</code> beats <code>*.my.domain.test</code>.
-        </p>
+        <p class="intro">Create a reusable header set, then choose exactly where the browser should send it.</p>
       </header>
 
       <form id="configuration-form">
@@ -23,8 +20,8 @@
             <div class="section-heading sidebar-heading">
               <div>
                 <p class="eyebrow">Library</p>
-                <h2 id="header-sets-title">Header sets</h2>
-                <p>Choose one to edit its details.</p>
+                <h2 id="header-sets-title">1. Header sets</h2>
+                <p>Create credentials once, then reuse them safely.</p>
               </div>
               <button id="add-header-set" type="button" class="secondary">Add header set</button>
             </div>
@@ -33,7 +30,7 @@
 
           <section class="header-set-editor-panel" aria-labelledby="selected-header-set-title">
             <div class="editor-heading">
-              <p class="eyebrow">Selected header set</p>
+              <p class="eyebrow">Step 1: selected set</p>
               <h2 id="selected-header-set-title">Header set</h2>
               <p id="selected-header-set-description"></p>
             </div>
@@ -45,17 +42,23 @@
           <div class="section-heading">
             <div>
               <p class="eyebrow">Mappings</p>
-              <h2 id="site-assignments-title">Site assignments</h2>
-              <p>One effective set applies to each site. Wildcards are defaults only.</p>
+              <h2 id="site-assignments-title">2. Site mappings</h2>
+              <p>Choose where a set applies. Exact hostnames override wildcard defaults.</p>
             </div>
             <button id="add-assignment" type="button" class="secondary">Add site assignment</button>
           </div>
           <div id="site-assignment-list" class="assignment-list"></div>
         </section>
 
-        <div class="actions">
-          <button type="submit">Save configuration</button>
-          <p id="status" role="status" aria-live="polite"></p>
+        <div class="save-bar">
+          <div>
+            <strong>3. Save and apply</strong>
+            <p>Only the enabled HTTPS hostnames above receive these headers.</p>
+          </div>
+          <div class="save-actions">
+            <p id="status" role="status" aria-live="polite"></p>
+            <button type="submit">Save changes</button>
+          </div>
         </div>
 
         <details class="danger-zone">
@@ -115,7 +118,7 @@
         <label class="assignment-scope-field">
           <span>HTTPS hostname or wildcard default</span>
           <input class="assignment-scope" type="text" autocomplete="off" placeholder="dvr.my.domain.test or *.my.domain.test" />
-          <small>Exact hosts override wildcard defaults. <code>*.my.domain.test</code> excludes the apex.</small>
+          <small class="assignment-scope-help">Exact hostnames override wildcard defaults.</small>
         </label>
         <label>
           <span>Header set</span>

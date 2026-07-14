@@ -42,15 +42,11 @@ try {
   try {
     const worker = context.serviceWorkers()[0] ?? await context.waitForEvent("serviceworker");
     const extensionId = new URL(worker.url()).host;
-    const reloadedWorker = context.waitForEvent("serviceworker");
-    await worker.evaluate(async (value) => {
-      await chrome.storage.local.set({
-        headerSets: value.headerSets,
-        siteAssignments: value.siteAssignments,
-      });
-      chrome.runtime.reload();
+    const ruleCount = await worker.evaluate(async (value) => {
+      await chrome.runtime.sendMessage({ type: "save-configuration", configuration: value });
+      return (await chrome.declarativeNetRequest.getDynamicRules()).length;
     }, configuration);
-    await reloadedWorker;
+    assert.equal(ruleCount, 1);
 
     const page = await context.newPage();
     await page.goto(echoUrl, { waitUntil: "domcontentloaded" });

@@ -223,6 +223,7 @@ function appendAssignment(assignment = {}) {
   element.querySelector(".assignment-header-set").dataset.selectedId = assignment.headerSetId ?? "";
   element.querySelector(".assignment-enabled").checked = assignment.enabled ?? true;
   element.querySelector(".assignment-header-set").addEventListener("change", syncHeaderSetPreview);
+  element.querySelector(".assignment-scope").addEventListener("input", () => updateAssignmentScopeHelp(element));
   element.querySelector(".remove-assignment").addEventListener("click", () => {
     element.remove();
     if (assignmentList.children.length === 0) {
@@ -232,7 +233,23 @@ function appendAssignment(assignment = {}) {
   });
 
   assignmentList.append(element);
+  updateAssignmentScopeHelp(element);
   refreshAssignmentSetChoices();
+}
+
+/**
+ * Explains whether a mapping is an exact hostname or a wildcard default.
+ *
+ * @param {HTMLElement} element One site-assignment editor.
+ * @returns {void}
+ */
+function updateAssignmentScopeHelp(element) {
+  const scope = element.querySelector(".assignment-scope").value.trim();
+  const help = element.querySelector(".assignment-scope-help");
+
+  help.textContent = scope.startsWith("*.")
+    ? "Wildcard default: applies to matching subdomains; exact hostnames win."
+    : "Exact hostname: takes precedence over any wildcard default.";
 }
 
 /**

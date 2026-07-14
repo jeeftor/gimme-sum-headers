@@ -273,6 +273,39 @@ a:focus-visible {
   gap: 0.75rem;
 }
 
+.save-bar {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.save-bar strong {
+  display: block;
+}
+
+.save-bar p {
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+}
+
+.save-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+  gap: 0.75rem;
+}
+
 .editor-footer {
   justify-content: space-between;
   padding-top: 0.25rem;
@@ -421,7 +454,9 @@ button.destructive {
   }
 
   .actions,
-  .editor-footer {
+  .editor-footer,
+  .save-bar,
+  .save-actions {
     align-items: stretch;
     flex-direction: column;
   }
