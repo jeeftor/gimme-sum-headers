@@ -55,7 +55,7 @@ try {
     optionsPage.once("dialog", (dialog) => dialog.accept());
     await deleteHeaderSet.click();
     assert.equal(await optionsPage.locator("#header-set-dialog").evaluate((dialog) => dialog.open), false);
-    await assert.doesNotReject(() => optionsPage.getByText("No header sets yet. Create one, then select it for a site.").waitFor());
+    await assert.doesNotReject(() => optionsPage.getByText("No header sets yet. Create one to begin assigning headers to sites.").waitFor());
     console.log("Verified the options page shows unsaved state and handles removal clearly.");
   } finally {
     await context.close();
